@@ -1,0 +1,19 @@
+* {
+  scroll-behavior: smooth;
+  transition-timing-function: ease-in;
+  transition: 0.2s;
+}
+
+table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: white;
+}
+
+table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background-color: white;
+}
