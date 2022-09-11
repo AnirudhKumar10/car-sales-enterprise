@@ -1,24 +1,25 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
+import { toast } from "react-toastify";
 
 export type SalesDetail = {
-  sales_id: String;
-  date_of_purchase: String;
+  sales_id: string;
+  date_of_purchase: string;
   customer_id: Number;
   fuel: "CNG" | "Petrol" | "Diesel";
-  premium: String;
+  premium: string;
   vehicle_segment: "A" | "B" | "C";
-  selling_price: String;
-  power_steering: String;
-  airbags: String;
-  sunroof: String;
-  matt_finish: String;
-  music_system: String;
+  selling_price: string;
+  power_steering: string;
+  airbags: string;
+  sunroof: string;
+  matt_finish: string;
+  music_system: string;
   customer_gender: "Male" | "Female";
   customer_income_group: "0-$25K" | "$25-$70K" | ">$70K";
   customer_region: "North" | "South" | "East" | "West";
-  customer_marital_status: String;
+  customer_marital_status: string;
 };
 
 export type FilterParams = {
@@ -73,8 +74,14 @@ export const getSalesAsync = createAsyncThunk(
       const response = await axios.get(`${baseUrl}/search`, {
         params: filterParams,
       });
+      toast.success("Sale Records successfully fetched!", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return response.data.salesResponse;
     } catch (err) {
+      toast.error("Error fetching sale records", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return rejectWithValue(err);
     }
   }
@@ -87,8 +94,14 @@ export const postSaleDetailAsync = createAsyncThunk(
       const response = await axios.post(`${baseUrl}/add`, {
         ...salesDetail,
       });
+      toast.success("Sale Record successfully added!", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return response.data;
     } catch (err) {
+      toast.error("Error adding the sale record", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return rejectWithValue(err);
     }
   }
@@ -101,8 +114,14 @@ export const updateSaleDetailAsync = createAsyncThunk(
       const response = await axios.patch(`${baseUrl}/update`, {
         ...salesDetail,
       });
+      toast.success("Sale Record successfully updated!", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return response.data;
     } catch (err) {
+      toast.error("Error updating the sale record", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return rejectWithValue(err);
     }
   }
@@ -115,8 +134,14 @@ export const deleteSaleDetailAsync = createAsyncThunk(
       const response = await axios.delete(`${baseUrl}/delete`, {
         params: sales_id,
       });
+      toast.success("Sale Record successfully deleted!", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return response.data;
     } catch (err) {
+      toast.error("Error deleting the sale record.", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
       return rejectWithValue(err);
     }
   }

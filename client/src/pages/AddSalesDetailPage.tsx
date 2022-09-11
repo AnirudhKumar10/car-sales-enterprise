@@ -9,9 +9,8 @@ import {
 import { RootState } from "../store/store";
 
 export const AddSalesDetailPage: React.FC = () => {
-  const { salesDetail, isError, isLoading } = useAppSelector(
-    (state: RootState) => state.sales
-  );
+  const { isLoading } = useAppSelector((state: RootState) => state.sales);
+
   const dispatch = useAppDispatch();
 
   return (
@@ -21,16 +20,9 @@ export const AddSalesDetailPage: React.FC = () => {
       </p>
       <div className="py-3">
         <SalesForm
-          state={salesDetail as SalesDetail}
-          onFormSubmit={(e: any) => {
-            e.preventDefault();
-          }}
-          getState={(state) => {
+          state={{} as SalesDetail}
+          onFormSubmit={(state) => {
             dispatch(postSaleDetailAsync(state));
-            if (isError) {
-              alert("Failed to Create a Sale");
-            }
-            return;
           }}
         />
       </div>

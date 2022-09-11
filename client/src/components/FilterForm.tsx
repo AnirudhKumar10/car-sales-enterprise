@@ -39,12 +39,14 @@ export const FilterForm: React.FC<{ onSubmit: Function }> = ({ onSubmit }) => {
       <Input
         name="sales_id"
         type="text"
+        value={filters?.sales_id}
         onChange={inputChangeHandler}
         placeholder={"Sales ID"}
       />
       <Input
         type="text"
         name="customer_id"
+        value={filters?.customer_id}
         onChange={inputChangeHandler}
         placeholder={"Customer ID"}
       />

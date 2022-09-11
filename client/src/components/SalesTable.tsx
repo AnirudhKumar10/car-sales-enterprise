@@ -26,9 +26,9 @@ export const SalesTable = ({ columns, data }: any) => {
   return (
     <div className="relative">
       {isLoading ? (
-        <>
+        <div className="flex h-96 justify-center items-center">
           <Spinner />
-        </>
+        </div>
       ) : data.length !== 0 ? (
         <>
           <div className="overflow-auto max-h-96">

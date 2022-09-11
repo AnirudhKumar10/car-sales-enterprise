@@ -20,7 +20,6 @@ exports.searchSales = (req, res) => {
 
 exports.addSale = (req, res) => {
   const sale = new Sale({ ...req.body });
-  console.log(sale, req.body);
   sale
     .save()
     .then((result) => {

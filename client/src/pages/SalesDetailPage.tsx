@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { SalesDetail, SalesDetailProps } from "../components/SalesDetail";
 import { SalesForm } from "../components/SalesForm";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 export const SalesDetailPage = () => {
   const [isEditMode, setIsEditmode] = useState(false);
 
-  const { salesDetail, isError, isLoading } = useAppSelector(
+  const { salesDetail, isLoading } = useAppSelector(
     (state: RootState) => state.sales
   );
 
@@ -132,15 +132,8 @@ export const SalesDetailPage = () => {
           <SalesForm
             isEdit
             state={salesDetail as SD}
-            onFormSubmit={(e: any) => {
-              e.preventDefault();
-            }}
-            getState={(state) => {
+            onFormSubmit={(state) => {
               dispatch(updateSaleDetailAsync(state));
-              if (isError) {
-                alert("Failed to Create a Sale");
-              }
-              return;
             }}
           />
         ) : (

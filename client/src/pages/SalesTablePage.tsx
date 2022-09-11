@@ -104,6 +104,7 @@ export const SalesTablePage = () => {
 
   return (
     <div className="shadow-md sm:rounded-lg">
+      <p className="text-2xl px-3 pb-3 font-semibold">{"Car Sales Table"}</p>
       <FilterForm onSubmit={onSubmit} />
       <SalesTable columns={columns} data={salesRows} />
     </div>

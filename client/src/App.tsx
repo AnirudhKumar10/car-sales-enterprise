@@ -3,6 +3,7 @@ import "./App.css";
 import { AddSalesDetailPage } from "./pages/AddSalesDetailPage";
 import { SalesDetailPage } from "./pages/SalesDetailPage";
 import { SalesTablePage } from "./pages/SalesTablePage";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
 
         <Route path="/add-sales-detail" element={<AddSalesDetailPage />} />
       </Routes>
+      <ToastContainer />
     </div>
   );
 }
