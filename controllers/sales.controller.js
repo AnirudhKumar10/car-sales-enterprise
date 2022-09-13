@@ -1,4 +1,6 @@
 const Sale = require("../models/sale.schema");
+const path = require("path");
+const fs = require("fs");
 
 exports.searchSales = (req, res) => {
   const { id, sales_id, customer_id, pageSize, pageNumer } = req.query;
@@ -11,7 +13,7 @@ exports.searchSales = (req, res) => {
     .skip(pageNumer * pageSize)
     .limit(pageSize)
     .then((salesResponse) => {
-      res.status(200).json({ salesResponse });
+      res.status(200).json({ salesResponse, totalItem: salesResponse.length });
     })
     .catch(() => {
       res.status(404).json({ message: "There was some error." });
@@ -58,4 +60,77 @@ exports.deleteSale = (req, res, next) => {
     .catch((err) => {
       res.status(404).json({ message: "There was error deleting." });
     });
+};
+
+exports.downloadCSVFile = async (req, res) => {
+  const { id, sales_id, customer_id } = req.query;
+
+  const data = await Sale.find({
+    ...(id && { _id: id }),
+    ...(sales_id && { sales_id }),
+    ...(customer_id && { customer_id }),
+  })
+    .select([
+      "sales_id",
+      "date_of_purchase",
+      "customer_id",
+      "fuel",
+      "premium",
+      "vehicle_segment",
+      "selling_price",
+      "power_steering",
+      "airbags",
+      "sunroof",
+      "matt_finish",
+      "music_system",
+      "customer_gender",
+      "customer_income_group",
+      "customer_region",
+      "customer_marital_status",
+    ])
+    .exec();
+
+  const csvContentHeader =
+    "sales id," +
+    "date of purchase," +
+    "customer id," +
+    "fuel," +
+    "premium," +
+    "vehicle segment," +
+    "selling price," +
+    "power steering," +
+    "airbags," +
+    "sunroof," +
+    "matt finish," +
+    "music system," +
+    "customer gender," +
+    "customer income group," +
+    "customer region," +
+    "customer marital status";
+
+  const csvContentData = data
+    .map((ob) => {
+      return Object.values(ob._doc).join(",");
+    })
+    .join("\n");
+
+  const date = new Date();
+
+  fs.writeFile(
+    `${__basedir}/files/sales.csv`,
+    csvContentHeader + "\n" + csvContentData,
+    (err) => {
+      if (err) {
+        return res.json({ err });
+      }
+
+      res.download(__basedir + `/files/sales.csv`, (err) => {
+        if (err) {
+          res.status(500).send({
+            message: "Could not download the file. " + err,
+          });
+        }
+      });
+    }
+  );
 };

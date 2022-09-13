@@ -5,9 +5,12 @@ const {
   addSale,
   updateSale,
   deleteSale,
+  downloadCSVFile,
 } = require("../controllers/sales.controller");
 
 router.get("/search", searchSales);
+
+router.get("/files", downloadCSVFile);
 
 router.post("/add", addSale);
 

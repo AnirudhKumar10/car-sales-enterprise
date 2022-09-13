@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import FileSaver from "file-saver";
 import axios from "axios";
 import { RootState } from "../store";
 import { toast } from "react-toastify";
@@ -31,6 +32,7 @@ export type FilterParams = {
 
 export interface SalesAppSate {
   salesRows: Array<SalesDetail>;
+  totalItems?: number;
   salesDetail: SalesDetail | null;
   isLoading?: boolean;
   isError?: boolean;
@@ -140,6 +142,34 @@ export const deleteSaleDetailAsync = createAsyncThunk(
       return response.data;
     } catch (err) {
       toast.error("Error deleting the sale record.", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const downloadSalesAsync = createAsyncThunk(
+  "sales/downloadSales",
+  async (
+    filterParams: Pick<FilterParams, "sales_id" | "customer_id">,
+    { rejectWithValue }
+  ): Promise<any> => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: `${baseUrl}/files`,
+        responseType: "blob",
+        params: filterParams,
+      });
+
+      FileSaver.saveAs(response.data, `Sales-Details-${new Date()}.csv`);
+
+      toast.success("Sale Records downloaded fetched!", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } catch (err) {
+      toast.error("Error downloading sale records", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
       return rejectWithValue(err);

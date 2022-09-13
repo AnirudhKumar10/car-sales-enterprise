@@ -7,6 +7,8 @@ const app = express();
 
 app.use(cors());
 
+global.__basedir = __dirname;
+
 mongoose
   .connect(
     "mongodb+srv://admin:test123@cluster0.oalb1.mongodb.net/carSales?retryWrites=true&w=majority"
