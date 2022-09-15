@@ -2,22 +2,49 @@ const Sale = require("../models/sale.schema");
 const path = require("path");
 const fs = require("fs");
 
-exports.searchSales = (req, res) => {
+exports.searchSales = async (req, res) => {
   const { id, sales_id, customer_id, pageSize, pageNumer } = req.query;
 
-  Sale.find({
-    ...(id && { _id: id }),
-    ...(sales_id && { sales_id }),
-    ...(customer_id && { customer_id }),
-  })
-    .skip(pageNumer * pageSize)
-    .limit(pageSize)
-    .then((salesResponse) => {
-      res.status(200).json({ salesResponse, totalItem: salesResponse.length });
-    })
-    .catch(() => {
-      res.status(404).json({ message: "There was some error." });
-    });
+  Sale.paginate(
+    {
+      ...(id && { _id: id }),
+      ...(sales_id && { sales_id }),
+      ...(customer_id && { customer_id }),
+    },
+    {
+      limit: pageSize,
+      page: pageNumer,
+      sort: { sales_id: 1 },
+      select: [
+        "sales_id",
+        "date_of_purchase",
+        "customer_id",
+        "fuel",
+        "premium",
+        "vehicle_segment",
+        "selling_price",
+        "power_steering",
+        "airbags",
+        "sunroof",
+        "matt_finish",
+        "music_system",
+        "customer_gender",
+        "customer_income_group",
+        "customer_region",
+        "customer_marital_status",
+      ],
+    },
+    function (err, result) {
+      if (err) {
+        return res.status(404).json({ message: "There was some error." });
+      }
+
+      return res.status(200).json({
+        salesResponse: result.docs,
+        totalItems: result.total,
+      });
+    }
+  );
 };
 
 exports.addSale = (req, res) => {
@@ -43,7 +70,7 @@ exports.updateSale = (req, res, next) => {
       res.status(200).json({ sale: sale });
     })
     .catch((err) => {
-      res.status(404).json({ message: "There was error updating." });
+      res.status(400).json({ message: "There was error updating.", err });
     });
 };
 

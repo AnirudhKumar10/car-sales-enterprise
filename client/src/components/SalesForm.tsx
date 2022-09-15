@@ -61,9 +61,13 @@ export const SalesForm = <T extends SalesDetail>({
           type="date"
           label="Date of purchase"
           name="date_of_purchase"
-          value={formatStringToDate(formik.values.date_of_purchase)}
+          value={
+            isEdit
+              ? formik.values.date_of_purchase
+              : formatStringToDate(formik.values.date_of_purchase)
+          }
           onChange={(e) => {
-            console.log(e.target.value);
+            formik.setFieldValue("date_of_purchase", e.target.value);
           }}
         />
         <Select
@@ -146,37 +150,49 @@ export const SalesForm = <T extends SalesDetail>({
           label="Power Steering"
           name={"power_steering"}
           value={formik.values.power_steering}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            formik.setFieldValue("power_steering", e.target.checked);
+          }}
         />
         <CheckBox
           label="Airbags"
           name={"airbags"}
           value={formik.values.airbags}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            formik.setFieldValue("airbags", e.target.checked);
+          }}
         />
         <CheckBox
           label="Sunroof"
           name={"sunroof"}
           value={formik.values.sunroof}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            formik.setFieldValue("sunroof", e.target.checked);
+          }}
         />
         <CheckBox
           label="Matt Finish"
           name={"matt_finish"}
           value={formik.values.matt_finish}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            formik.setFieldValue("matt_finish", e.target.checked);
+          }}
         />
         <CheckBox
           label="Music System"
           name={"music_system"}
           value={formik.values.music_system}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            formik.setFieldValue("music_system", e.target.checked);
+          }}
         />
         <CheckBox
           label="Married ?"
           name={"customer_marital_status"}
           value={formik.values.customer_marital_status}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            formik.setFieldValue("customer_marital_status", e.target.checked);
+          }}
         />
       </div>
       <div className="p-3">

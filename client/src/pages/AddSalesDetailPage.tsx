@@ -22,6 +22,7 @@ export const AddSalesDetailPage: React.FC = () => {
         <SalesForm
           state={{} as SalesDetail}
           onFormSubmit={(state) => {
+            console.log(state);
             dispatch(postSaleDetailAsync(state));
           }}
         />

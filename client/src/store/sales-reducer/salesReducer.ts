@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 export type SalesDetail = {
   sales_id: string;
   date_of_purchase: string;
-  customer_id: Number;
+  customer_id: string;
   fuel: "CNG" | "Petrol" | "Diesel";
   premium: string;
   vehicle_segment: "A" | "B" | "C";
@@ -33,6 +33,7 @@ export type FilterParams = {
 export interface SalesAppSate {
   salesRows: Array<SalesDetail>;
   totalItems?: number;
+  totalPages?: number;
   salesDetail: SalesDetail | null;
   isLoading?: boolean;
   isError?: boolean;
@@ -44,7 +45,7 @@ export const initialState: SalesAppSate = {
   salesDetail: {
     sales_id: "",
     date_of_purchase: "",
-    customer_id: 0,
+    customer_id: "",
     fuel: "CNG",
     premium: "",
     vehicle_segment: "A",
@@ -79,7 +80,7 @@ export const getSalesAsync = createAsyncThunk(
       toast.success("Sale Records successfully fetched!", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
-      return response.data.salesResponse;
+      return response.data;
     } catch (err) {
       toast.error("Error fetching sale records", {
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -134,7 +135,7 @@ export const deleteSaleDetailAsync = createAsyncThunk(
   async (sales_id: string, { rejectWithValue }): Promise<any> => {
     try {
       const response = await axios.delete(`${baseUrl}/delete`, {
-        params: sales_id,
+        params: { sales_id },
       });
       toast.success("Sale Record successfully deleted!", {
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -197,7 +198,9 @@ export const salesSlice = createSlice({
       })
       .addCase(getSalesAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.salesRows = action.payload;
+        state.salesRows = action.payload.salesResponse;
+        state.totalItems = action.payload.totalItems;
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(getSalesAsync.rejected, (state) => {
         state.isLoading = false;

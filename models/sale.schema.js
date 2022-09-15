@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const timestamps = require("mongoose-timestamp");
+const mongoosePaginate = require("mongoose-paginate");
 
 const saleSchema = mongoose.Schema({
   sales_id: { type: Number, unique: true, required: true },
@@ -37,5 +38,6 @@ const saleSchema = mongoose.Schema({
 });
 
 saleSchema.plugin(timestamps);
+saleSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Sale", saleSchema, "sales");
